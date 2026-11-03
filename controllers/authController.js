@@ -96,12 +96,6 @@ exports.createStaff = async (req, res) => {
 		return res.status(201).json({
 			success: true,
 			message: "Staff account created successfully",
-			user: {
-				id: staff._id,
-				name: staff.name,
-				email: staff.email,
-				role: staff.role,
-			},
 		});
 	} catch (error) {
 		// if duplicate-key errors come
