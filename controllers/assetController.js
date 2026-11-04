@@ -89,7 +89,7 @@ exports.getAllAssets = async (req, res) => {
 
 		const [assets, total] = await Promise.all([
 			Asset.find(searchQuery)
-				.populate("product", "productName")
+				.populate("product")
 				.sort({ createdAt: -1 })
 				.skip(skip)
 				.limit(Number(limit)),
@@ -124,7 +124,10 @@ exports.getAssetById = async (req, res) => {
 			});
 		}
 
-		const asset = await Asset.findById(id).populate("product", "productName");
+		const asset = await Asset.findById(id).populate(
+			"product",
+			"productName rentalRate securityDeposi",
+		);
 
 		if (!asset) {
 			return res.status(404).json({

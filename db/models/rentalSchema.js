@@ -86,6 +86,11 @@ const rentalSchema = mongoose.Schema(
 			ref: "User",
 			required: true,
 		},
+		paymentStatus: {
+			type: String,
+			enum: ["unpaid", "partially_paid", "paid"],
+			default: "unpaid",
+		},
 	},
 	{ timestamps: true },
 );

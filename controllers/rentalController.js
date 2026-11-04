@@ -15,7 +15,6 @@ const releaseAssets = async (assetIds) => {
 	);
 };
 
-// 1. CREATE RENTAL
 // Reserve the selected assets
 exports.createRental = async (req, res) => {
 	let reservedIds = [];
@@ -171,7 +170,6 @@ exports.createRental = async (req, res) => {
 	}
 };
 
-// 2. GET ALL RENTALS
 // Search, filter and pagination
 exports.getAllRentals = async (req, res) => {
 	try {
@@ -181,6 +179,18 @@ exports.getAllRentals = async (req, res) => {
 		const perPage = Math.max(1, Math.min(100, Number(limit) || 10));
 
 		const query = {};
+
+		// Filter by customer
+		if (req.query.customer) {
+			if (!mongoose.Types.ObjectId.isValid(req.query.customer)) {
+				return res.status(400).json({
+					success: false,
+					message: "Invalid customer ID",
+				});
+			}
+
+			query.customer = req.query.customer;
+		}
 
 		// Search by rental number or customer name
 		if (search.trim()) {
@@ -273,7 +283,6 @@ exports.getRentalById = async (req, res) => {
 	}
 };
 
-// 4. DISPATCH RENTAL
 // Change reserved assets to rented
 exports.dispatchRental = async (req, res) => {
 	try {
@@ -348,7 +357,6 @@ exports.dispatchRental = async (req, res) => {
 	}
 };
 
-// 5. RETURN RENTAL
 // Inspect assets and complete rental
 exports.returnRental = async (req, res) => {
 	try {
@@ -495,7 +503,6 @@ exports.returnRental = async (req, res) => {
 	}
 };
 
-// 6. CANCEL RENTAL
 // Release reserved assets
 exports.cancelRental = async (req, res) => {
 	try {
