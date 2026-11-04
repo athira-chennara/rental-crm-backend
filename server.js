@@ -7,6 +7,7 @@ const userRouter = require("./routers/userRouter");
 const productRouter = require("./routers/productRouter");
 const categoryRouter = require("./routers/categoryRouter");
 const assetRouter = require("./routers/assetRouter");
+const rentalRouter = require("./routers/rentalRouter");
 require("dotenv").config();
 
 // internal modules
@@ -22,6 +23,7 @@ app.use(cors());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/assets", assetRouter);
+app.use("/api/rentals", rentalRouter);
 app.use("/api/products", productRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/customers", customerRouter);
