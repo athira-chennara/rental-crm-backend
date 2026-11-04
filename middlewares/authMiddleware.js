@@ -19,6 +19,7 @@ exports.tokenVerify = async (req, res, next) => {
 
 		// decode token from autherization data
 		const token = authorization.split(" ")[1];
+		console.log("token -> ", token);
 
 		// verify the token is valid or not
 		const tokenValid = jwt.verify(token, process.env.JWT_SECRET);
@@ -57,6 +58,8 @@ exports.tokenVerify = async (req, res, next) => {
 // role checking middleware
 exports.roleVerify = (...allowedRoles) => {
 	return (req, res, next) => {
+		console.log(req.user.role);
+
 		try {
 			// Check whether user exists in request
 			if (!req.user) {
