@@ -11,7 +11,6 @@ exports.getAllUsers = async (req, res) => {
 
 		const searchQuery = {
 			role,
-			_id: { $ne: req.user.id },
 		};
 
 		if (search) {
