@@ -28,6 +28,8 @@ app.use("/api/products", productRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/customers", customerRouter);
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
 	console.log("App is running @http://localhost:3000/");
 });

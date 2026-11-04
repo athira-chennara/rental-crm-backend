@@ -8,6 +8,6 @@ const { tokenVerify, roleVerify } = require("../middlewares/authMiddleware");
 const authRouter = express.Router();
 
 authRouter.post("/login", login);
-authRouter.post("/create-staff", tokenVerify, roleVerify("admin"), createStaff);
+authRouter.post("/create-staff", createStaff);
 
 module.exports = authRouter;
