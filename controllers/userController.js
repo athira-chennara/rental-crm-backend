@@ -7,21 +7,18 @@ const User = require("../db/models/userSchema");
 // Get all users
 exports.getAllUsers = async (req, res) => {
 	try {
-		const { search = "", role = "", page = 1, limit = 10 } = req.query;
+		const { search = "", page = 1, limit = 10, role = "" } = req.query;
 
-		// Search filter
-		const searchQuery = {};
+		const searchQuery = {
+			role,
+			_id: { $ne: req.user.id },
+		};
 
 		if (search) {
 			searchQuery.$or = [
 				{ userName: { $regex: search, $options: "i" } },
 				{ email: { $regex: search, $options: "i" } },
 			];
-		}
-
-		// Role filter
-		if (role) {
-			searchQuery.role = role;
 		}
 
 		// Pagination
@@ -218,6 +215,7 @@ exports.changePassword = async (req, res) => {
 exports.deactivateUser = async (req, res) => {
 	try {
 		const { id } = req.params;
+		const { isActive } = req.body;
 
 		// Prevent admin from deactivating their own account
 		if (req.user.id === id) {
@@ -227,9 +225,16 @@ exports.deactivateUser = async (req, res) => {
 			});
 		}
 
+		// if (req.user.role !== "staff") {
+		// 	return res.status(403).json({
+		// 		success: false,
+		// 		message: "Only staff accounts can be deactivated here.",
+		// 	});
+		// }
+
 		const user = await User.findByIdAndUpdate(
 			id,
-			{ $set: { isActive: false } },
+			{ $set: { isActive: isActive } },
 			{ new: true, runValidators: true },
 		);
 
@@ -258,6 +263,49 @@ exports.deactivateUser = async (req, res) => {
 		return res.status(500).json({
 			success: false,
 			message: "Internal Server Error.",
+		});
+	}
+};
+
+// delete user
+exports.deleteUser = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		// Prevent deleting your own account
+		if (req.user.id === id) {
+			return res.status(400).json({
+				success: false,
+				message: "You cannot delete your own account.",
+			});
+		}
+
+		const user = await User.findById(id);
+
+		if (!user) {
+			return res.status(404).json({
+				success: false,
+				message: "User not found.",
+			});
+		}
+
+		await User.findByIdAndDelete(id);
+
+		return res.status(200).json({
+			success: true,
+			message: "Staff deleted successfully.",
+		});
+	} catch (error) {
+		if (error.name === "CastError") {
+			return res.status(400).json({
+				success: false,
+				message: "Invalid user ID.",
+			});
+		}
+
+		return res.status(500).json({
+			success: false,
+			message: "Failed to delete staff.",
 		});
 	}
 };

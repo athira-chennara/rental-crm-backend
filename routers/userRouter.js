@@ -8,12 +8,14 @@ const {
 	updateUser,
 	changePassword,
 	deactivateUser,
+	deleteUser,
 } = require("../controllers/userController");
 const { tokenVerify, roleVerify } = require("../middlewares/authMiddleware");
 
 const userRouter = express.Router();
 
-userRouter.get("/", tokenVerify, roleVerify("admin"), getAllUsers);
+userRouter.get("/", tokenVerify, roleVerify("admin", "staff"), getAllUsers);
+
 userRouter.get("/:id", tokenVerify, roleVerify("admin"), getUserById);
 
 userRouter.put("/:id", tokenVerify, roleVerify("admin"), updateUser);
@@ -30,5 +32,7 @@ userRouter.patch(
 	roleVerify("admin"),
 	deactivateUser,
 );
+
+userRouter.delete("/:id", tokenVerify, roleVerify("admin"), deleteUser);
 
 module.exports = userRouter;
