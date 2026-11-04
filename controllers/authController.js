@@ -53,10 +53,11 @@ exports.login = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			message: "Login Successfully.",
+			token: newToken,
 			user: {
-				token: newToken,
 				userName: userExist.userName,
 				email: userExist.email,
+				role: userExist.role,
 			},
 		});
 	} catch (error) {
@@ -105,6 +106,14 @@ exports.createStaff = async (req, res) => {
 				message: "Email already exists",
 			});
 		}
+
+		if (error.name === "ValidationError") {
+			return res.status(400).json({
+				success: false,
+				message: error.message,
+			});
+		}
+
 		return res
 			.status(500)
 			.json({ error: true, message: "Internal Server Error." });
